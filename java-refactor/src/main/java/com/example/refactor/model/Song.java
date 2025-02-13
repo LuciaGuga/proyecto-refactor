@@ -16,91 +16,70 @@ public class Song {
 
     public SpotifyArtist spotifyArtist;
 
-    public String getId() {
-        return id;
+    /* Con el patrón de diseño creacional Builder implementado con la clase
+     * Song Builder ya no es necesario métodos setter pero sí un constructor
+     * con todos los parámetros y seguiremos necesitando los getters
+     */
+
+    public Song(String id, String name, String explicit, String playable,
+                String popularity, String albumId, String albumType,
+                String albumName, String albumReleaseDate, String albumTotalTracks,
+                SpotifyArtist spotifyArtist) {
+        this.id = id;
+        this.name = name;
+        this.explicit = explicit;
+        this.playable = playable;
+        this.popularity = popularity;
+        this.albumId = albumId;
+        this.albumType = albumType;
+        this.albumName = albumName;
+        this.albumReleaseDate = albumReleaseDate;
+        this.albumTotalTracks = albumTotalTracks;
+        this.spotifyArtist = spotifyArtist;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getId() {
+        return id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getExplicit() {
         return explicit;
-    }
-
-    public void setExplicit(String explicit) {
-        this.explicit = explicit;
     }
 
     public String getPlayable() {
         return playable;
     }
 
-    public void setPlayable(String playable) {
-        this.playable = playable;
-    }
-
     public String getPopularity() {
         return popularity;
-    }
-
-    public void setPopularity(String popularity) {
-        this.popularity = popularity;
     }
 
     public String getAlbumId() {
         return albumId;
     }
 
-    public void setAlbumId(String albumId) {
-        this.albumId = albumId;
-    }
-
     public String getAlbumType() {
         return albumType;
-    }
-
-    public void setAlbumType(String albumType) {
-        this.albumType = albumType;
     }
 
     public String getAlbumName() {
         return albumName;
     }
 
-    public void setAlbumName(String albumName) {
-        this.albumName = albumName;
-    }
-
     public String getAlbumReleaseDate() {
         return albumReleaseDate;
-    }
-
-    public void setAlbumReleaseDate(String albumReleaseDate) {
-        this.albumReleaseDate = albumReleaseDate;
     }
 
     public String getAlbumTotalTracks() {
         return albumTotalTracks;
     }
 
-    public void setAlbumTotalTracks(String albumTotalTracks) {
-        this.albumTotalTracks = albumTotalTracks;
-    }
-
     public SpotifyArtist getSpotifyArtist() {
         return spotifyArtist;
     }
 
-    public void setSpotifyArtist(SpotifyArtist spotifyArtist) {
-        this.spotifyArtist = spotifyArtist;
-    }
 }

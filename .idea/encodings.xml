@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/java-new-features/SealedClasses/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/java-new-features/SealedClasses/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/java-new-features/VirtualThreads/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/java-new-features/VirtualThreads/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/java-new-features/banking-app/core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/java-new-features/banking-app/core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/java-new-features/banking-app/logger/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/java-new-features/banking-app/logger/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/java-new-features/banking-app/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/java-new-features/banking-app/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/java-new-features/banking-app/ui/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/java-new-features/banking-app/ui/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/streams/StreamsPractice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/streams/StreamsPractice/src/main/resources" charset="UTF-8" />
+  </component>
+</project>
