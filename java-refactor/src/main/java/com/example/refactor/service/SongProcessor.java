@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.LinkedList;
+import java.util.Optional;
 
 public class SongProcessor {
 
@@ -21,27 +22,26 @@ public class SongProcessor {
         final JSONObject playlist = ExampleFileUtils.getJsonFromFile(inputSource);
         final LinkedList<Song> spotifyPlayList = new LinkedList<>();
 
-        //Modificamos para evitar una NullPointerException
-
-        final JSONArray items = (playlist != null && playlist.containsKey("items"))
-                ? (JSONArray) playlist.get("items")
-                : new JSONArray();
+        //Utilizamos Optional y streams para evitar una NullPinterException
+        final JSONArray items = Optional.ofNullable(playlist)
+                .map(p -> (JSONArray) p.get("items"))
+                .orElse(new JSONArray());
 
         for (Object item : items) {
-            if (item == null) continue; // Salida temprana si item es null
-
             JSONObject songJSON = (JSONObject) item;
-            JSONObject trackJSON = new JSONObject();
-            if(songJSON.containsKey("track"))
-                trackJSON = (JSONObject) songJSON.get("track");
-            if (trackJSON == null) continue; // Salida temprana si trackJSON es null
-
+            JSONObject trackJSON = (JSONObject) songJSON.get("track");
             JSONArray artistsJSON = (JSONArray) trackJSON.get("artists");
             JSONObject albumJSON = (JSONObject) trackJSON.get("album");
-            if (artistsJSON == null || albumJSON == null) continue; // Salida temprana si falta información
 
             SpotifyArtist artist = extractArtistFromJson(artistsJSON);
             Song song = getSong(trackJSON, albumJSON, artist);
+
+            for (Object element : artistsJSON) {
+                JSONObject artistJSON = (JSONObject) element;
+                artist.setId(artistJSON.get("id").toString());
+                artist.setName(artistJSON.get("name").toString());
+            }
+
             spotifyPlayList.add(song);
         }
 
@@ -64,10 +64,8 @@ public class SongProcessor {
         return artist;
     }
 
+    // Creamos los objetos de tipo Song según el patrón de diseño creacional Builder
     private Song getSong(JSONObject trackJSON, JSONObject albumJSON, SpotifyArtist artist){
-
-        // Creamos los objetos de tipo Song según el patrón de diseño creacional Builder
-
         return new SongBuilder()
                 .id(trackJSON.get("id").toString())
                 .name(trackJSON.get("name").toString())
