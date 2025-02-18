@@ -22,34 +22,35 @@ public class SongProcessor {
         final JSONObject playlist = ExampleFileUtils.getJsonFromFile(inputSource);
         final LinkedList<Song> spotifyPlayList = new LinkedList<>();
 
-        //Utilizamos Optional y streams para evitar una NullPinterException
-        final JSONArray items = Optional.ofNullable(playlist)
-                .map(p -> (JSONArray) p.get("items"))
-                .orElse(new JSONArray());
+        // Creamos el Optional<JSONArray>
+        Optional<JSONArray> optionalItems = Optional.ofNullable(playlist)
+                .map(p -> (JSONArray) p.get("items"));
 
-        for (Object item : items) {
-            JSONObject songJSON = (JSONObject) item;
-            JSONObject trackJSON = (JSONObject) songJSON.get("track");
-            JSONArray artistsJSON = (JSONArray) trackJSON.get("artists");
-            JSONObject albumJSON = (JSONObject) trackJSON.get("album");
+        // Procesamos los items si existen,  agregamos el método ifPresentOrElse introducido en Java 9
+        optionalItems.ifPresentOrElse(
+                items -> {
+                    // Código que procesa los items cuando existen
+                    for (Object item : items) {
+                        JSONObject songJSON = (JSONObject) item;
+                        JSONObject trackJSON = (JSONObject) songJSON.get("track");
+                        JSONArray artistsJSON = (JSONArray) trackJSON.get("artists");
+                        JSONObject albumJSON = (JSONObject) trackJSON.get("album");
 
-            SpotifyArtist artist = extractArtistFromJson(artistsJSON);
-            Song song = getSong(trackJSON, albumJSON, artist);
+                        SpotifyArtist artist = extractArtistFromJson(artistsJSON);
+                        Song song = getSong(trackJSON, albumJSON, artist);
 
-            for (Object element : artistsJSON) {
-                JSONObject artistJSON = (JSONObject) element;
-                artist.setId(artistJSON.get("id").toString());
-                artist.setName(artistJSON.get("name").toString());
-            }
+                        spotifyPlayList.add(song);
+                    }
 
-            spotifyPlayList.add(song);
-        }
-
-        for (Song song : spotifyPlayList) {
-            if(song != null)
-                LOGGER.info(" - {} - {} - {} - {}", song.getId(), song.getName(),
-                    song.getSpotifyArtist().getName(), song.getAlbumName());
-        }
+                    // Logging de las canciones
+                    for (Song song : spotifyPlayList) {
+                        if(song != null)
+                            LOGGER.info(" - {} - {} - {} - {}", song.getId(), song.getName(),
+                                    song.getSpotifyArtist().getName(), song.getAlbumName());
+                    }
+                },
+                () -> LOGGER.warn("No se pudo procesar la playlist porque es null o no contiene items")
+        );
     }
 
     //Creamos los siguientes dos métodos para hacer el código más limpio, más legible y más mantenible
