@@ -17,9 +17,9 @@ public class SongProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(SongProcessor.class);
 
     public void processSongs() {
-        final String playlistFileName = PropertyFactory.getProperties().getProperty("refactorpractice.playlist.filename");
-        final File inputSource = ExampleFileUtils.getFileFromResources(playlistFileName);
-        final JSONObject playlist = ExampleFileUtils.getJsonFromFile(inputSource);
+        final var playlistFileName = PropertyFactory.getProperties().getProperty("refactorpractice.playlist.filename");
+        final var inputSource = ExampleFileUtils.getFileFromResources(playlistFileName);
+        final var playlist = ExampleFileUtils.getJsonFromFile(inputSource);
         final LinkedList<Song> spotifyPlayList = new LinkedList<>();
 
         // Creamos el Optional<JSONArray>

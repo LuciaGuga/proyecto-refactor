@@ -10,7 +10,7 @@ public class Solution {
          * como puerta de entrada a toda la lógica, mediante el
          * método processSongs()
          */
-        SongProcessor songProcessor = new SongProcessor();
+        var songProcessor = new SongProcessor();
         songProcessor.processSongs();
     }
 }
