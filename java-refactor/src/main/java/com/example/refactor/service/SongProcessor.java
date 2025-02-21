@@ -1,14 +1,12 @@
 package com.example.refactor.service;
 
 import com.example.refactor.model.Song;
-import com.example.refactor.model.SongBuilder;
 import com.example.refactor.model.SpotifyArtist;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.Optional;
 
@@ -45,8 +43,8 @@ public class SongProcessor {
                     // Logging de las canciones
                     for (Song song : spotifyPlayList) {
                         if(song != null)
-                            LOGGER.info(" - {} - {} - {} - {}", song.getId(), song.getName(),
-                                    song.getSpotifyArtist().getName(), song.getAlbumName());
+                            LOGGER.info(" - {} - {} - {} - {}", song.id(), song.name(),
+                                    song.spotifyArtist().getName(), song.albumName());
                     }
                 },
                 () -> LOGGER.warn("No se pudo procesar la playlist porque es null o no contiene items")
@@ -67,7 +65,7 @@ public class SongProcessor {
 
     // Creamos los objetos de tipo Song según el patrón de diseño creacional Builder
     private Song getSong(JSONObject trackJSON, JSONObject albumJSON, SpotifyArtist artist){
-        return new SongBuilder()
+        /*return new SongBuilder()
                 .id(trackJSON.get("id").toString())
                 .name(trackJSON.get("name").toString())
                 .explicit(trackJSON.get("explicit").toString())
@@ -79,6 +77,12 @@ public class SongProcessor {
                 .albumReleaseDate(albumJSON.get("release_date").toString())
                 .albumTotalTracks(albumJSON.get("total_tracks").toString())
                 .spotifyArtist(artist)
-                .build();
+                .build();*/
+        return new Song(trackJSON.get("explicit").toString(), trackJSON.get("id").toString(),
+        trackJSON.get("is_playable").toString(), trackJSON.get("name").toString(),
+        trackJSON.get("popularity").toString(), albumJSON.get("album_type").toString(),
+        albumJSON.get("id").toString(), albumJSON.get("name").toString(),
+        albumJSON.get("release_date").toString(), albumJSON.get("total_tracks").toString(),
+                new SpotifyArtist());
     }
 }
