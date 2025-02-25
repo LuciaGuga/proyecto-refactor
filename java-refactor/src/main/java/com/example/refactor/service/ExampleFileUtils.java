@@ -12,7 +12,7 @@ import java.net.URL;
 public class ExampleFileUtils {
 
     public static JSONObject getJsonFromFile(File inputSource) {
-        JSONParser parser = new JSONParser();
+        var parser = new JSONParser();
         try {
             return (JSONObject) parser.parse(new FileReader(inputSource));
         } catch (IOException | ParseException e) {
@@ -22,9 +22,9 @@ public class ExampleFileUtils {
     }
 
     public static File getFileFromResources(String fileName) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        var classLoader = Thread.currentThread().getContextClassLoader();
 
-        URL resource = classLoader.getResource(fileName);
+        var resource = classLoader.getResource(fileName);
         if (resource != null) {
             return new File(resource.getFile());
         } else {
