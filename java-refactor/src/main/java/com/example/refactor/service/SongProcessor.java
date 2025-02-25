@@ -38,7 +38,7 @@ public class SongProcessor {
     }
 
 
-    //Creamos los siguientes dos métodos para hacer el código más limpio, más legible y más mantenible
+    //Creamos los siguientes tres métodos para hacer el código más limpio, más legible y más mantenible
 
     private void processItems(JSONArray items, LinkedList<Song> spotifyPlayList) {
         {
