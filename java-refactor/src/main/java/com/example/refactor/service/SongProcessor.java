@@ -15,74 +15,72 @@ public class SongProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(SongProcessor.class);
 
     public void processSongs() {
+        //Usamos var para implementar inferencia de tipos
         final var playlistFileName = PropertyFactory.getProperties().getProperty("refactorpractice.playlist.filename");
         final var inputSource = ExampleFileUtils.getFileFromResources(playlistFileName);
         final var playlist = ExampleFileUtils.getJsonFromFile(inputSource);
-        final LinkedList<Song> spotifyPlayList = new LinkedList<>();
+        final var spotifyPlayList = new LinkedList<Song>();
 
-        // Creamos el Optional<JSONArray>
+        // Usamos Optional<JSONArray> y pattern matching para instanceof
         Optional<JSONArray> optionalItems = Optional.ofNullable(playlist)
-                .map(p -> (JSONArray) p.get("items"));
+                .map(p -> {
+                    if(p.get("items") instanceof JSONArray jsonArray) {
+                        return jsonArray;
+                    }
+                    return null;
+                    });
 
-        // Procesamos los items si existen,  agregamos el método ifPresentOrElse introducido en Java 9
+        // Usamos ifPresentOrElse introducido en Java 9
         optionalItems.ifPresentOrElse(
-                items -> {
-                    // Código que procesa los items cuando existen
-                    for (Object item : items) {
-                        JSONObject songJSON = (JSONObject) item;
-                        JSONObject trackJSON = (JSONObject) songJSON.get("track");
-                        JSONArray artistsJSON = (JSONArray) trackJSON.get("artists");
-                        JSONObject albumJSON = (JSONObject) trackJSON.get("album");
-
-                        SpotifyArtist artist = extractArtistFromJson(artistsJSON);
-                        Song song = getSong(trackJSON, albumJSON, artist);
-
-                        spotifyPlayList.add(song);
-                    }
-
-                    // Logging de las canciones
-                    for (Song song : spotifyPlayList) {
-                        if(song != null)
-                            LOGGER.info(" - {} - {} - {} - {}", song.id(), song.name(),
-                                    song.spotifyArtist().getName(), song.albumName());
-                    }
-                },
+                items -> processItems(items, spotifyPlayList), //creamos el método ProcessItems
                 () -> LOGGER.warn("No se pudo procesar la playlist porque es null o no contiene items")
         );
     }
 
+
     //Creamos los siguientes dos métodos para hacer el código más limpio, más legible y más mantenible
 
+    private void processItems(JSONArray items, LinkedList<Song> spotifyPlayList) {
+        {
+            for (Object item : items) {
+                //Usamos var para implementar inferencia de tipos
+                var songJSON = (JSONObject) item;
+                var trackJSON = (JSONObject) songJSON.get("track");
+                var artistsJSON = (JSONArray) trackJSON.get("artists");
+                var albumJSON = (JSONObject) trackJSON.get("album");
+
+                var artist = extractArtistFromJson(artistsJSON);
+                var song = getSong(trackJSON, albumJSON, artist);
+
+                spotifyPlayList.add(song);
+            }
+
+            // Logging de las canciones
+            for (Song song : spotifyPlayList) {
+                if(song != null)
+                    LOGGER.info(" - {} - {} - {} - {}", song.id(), song.name(),
+                            song.spotifyArtist().getName(), song.albumName());
+            }
+        }
+    }
+
     private SpotifyArtist extractArtistFromJson(JSONArray artistsJSON){
-        SpotifyArtist artist = new SpotifyArtist();
+        var artist = new SpotifyArtist();
         for (Object element : artistsJSON) {
-            JSONObject artistJSON = (JSONObject) element;
+            var artistJSON = (JSONObject) element;
             artist.setId(artistJSON.get("id").toString());
             artist.setName(artistJSON.get("name").toString());
         }
         return artist;
     }
 
-    // Creamos los objetos de tipo Song según el patrón de diseño creacional Builder
     private Song getSong(JSONObject trackJSON, JSONObject albumJSON, SpotifyArtist artist){
-        /*return new SongBuilder()
-                .id(trackJSON.get("id").toString())
-                .name(trackJSON.get("name").toString())
-                .explicit(trackJSON.get("explicit").toString())
-                .playable(trackJSON.get("is_playable").toString())
-                .popularity(trackJSON.get("popularity").toString())
-                .albumId(albumJSON.get("id").toString())
-                .albumType(albumJSON.get("album_type").toString())
-                .albumName(albumJSON.get("name").toString())
-                .albumReleaseDate(albumJSON.get("release_date").toString())
-                .albumTotalTracks(albumJSON.get("total_tracks").toString())
-                .spotifyArtist(artist)
-                .build();*/
-        return new Song(trackJSON.get("explicit").toString(), trackJSON.get("id").toString(),
-        trackJSON.get("is_playable").toString(), trackJSON.get("name").toString(),
-        trackJSON.get("popularity").toString(), albumJSON.get("album_type").toString(),
-        albumJSON.get("id").toString(), albumJSON.get("name").toString(),
-        albumJSON.get("release_date").toString(), albumJSON.get("total_tracks").toString(),
-                new SpotifyArtist());
+
+        return new Song(trackJSON.get("id").toString(), trackJSON.get("name").toString(),
+                trackJSON.get("explicit").toString(), trackJSON.get("is_playable").toString(),
+                trackJSON.get("popularity").toString(), albumJSON.get("id").toString(),
+                albumJSON.get("album_type").toString(), albumJSON.get("name").toString(),
+                albumJSON.get("release_date").toString(), albumJSON.get("total_tracks").toString(),
+                artist);
     }
 }
